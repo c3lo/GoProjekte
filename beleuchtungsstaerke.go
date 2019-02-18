@@ -7,33 +7,47 @@ import "math"
 Es wird angenommen, dass die Lichtstärke (engl. illuminance)
 der Lichtquelle über den ganzen Abstrahlwinkel (in Sterandiant) konstant bleibt.
 Daher ist in diesem Fall:
-Lichtstärke = Lichtstrom(engl. luminous_flux)/Raumwinkel(engl. solid_angle)
+Lichtstärke = Lichtstrom(engl. luminousFlux)/Raumwinkel(engl. solidAngle)
 */
 
-func deg2rad(opening_angle float64) float64 {
-  return (opening_angle*math.Pi)/180
+func deg2rad(openingAngle float64) float64 {
+	return (openingAngle * math.Pi) / 180
 }
 
-func rad2sr(opening_angle float64) float64 {
-  return 2*math.Pi*(1 - math.Cos(opening_angle/2))
+func rad2sr(openingAngle float64) float64 {
+	return 2 * math.Pi * (1 - math.Cos(openingAngle/2))
 }
 
-func sr2rad(solid_angle float64) float64 {
-  return 2*math.Acos(-solid_angle/(2*math.Pi) + 1)
+func sr2rad(solidAngle float64) float64 {
+	return 2 * math.Acos(-solidAngle/(2*math.Pi)+1)
 }
 
-func rad2sr_rect(angle_x, angle_y float64) float64{
-  /* falls der Lichtkegel kein Kegel, sondern eine Pyramide ist.
-  Beispiele: Der Spiegel eines Overhead-Projektors,
-  eine rechteckige Straßenlaterne*/
-  return 4*math.Asin(math.Sin(angle_x)*math.Sin(angle_y))
+func rad2srRect(angleX, angleY float64) float64 {
+	/* falls der Lichtkegel kein Kegel, sondern eine Pyramide ist.
+	Beispiele: Der Spiegel eines Overhead-Projektors,
+	eine rechteckige Straßenlaterne*/
+	return 4 * math.Asin(math.Sin(angleX)*math.Sin(angleY))
 }
 
-func calc_illuminance(opening_angle, luminous_flux, distance, angle_of_incline float64) float64{
-  solid_angle := rad2sr(opening_angle)
-  return (luminous_flux/(math.Pow(distance, 2)*solid_angle))*math.Cos(angle_of_incline)
+type IlluminanceParameters struct {
+	OpeningAngle   float64
+	LuminousFlux   float64
+	Distance       float64
+	AngleOfIncline float64
 }
 
-func main()  {
-  fmt.Println("Beleuchtungsstärke:", calc_illuminance(sr2rad(1.67*math.Pi), 3545, 1.67, math.Atan(1.15/1.67)), "Lux")
+func (self *IlluminanceParameters) CalcIlluminance() float64 {
+	solidAngle := rad2sr(self.OpeningAngle)
+	return (self.LuminousFlux / (math.Pow(self.Distance, 2) * solidAngle)) * math.Cos(self.AngleOfIncline)
+}
+
+func main() {
+	params := IlluminanceParameters{
+		OpeningAngle:   sr2rad(1.67 * math.Pi),
+		LuminousFlux:   3545,
+		Distance:       1.67,
+		AngleOfIncline: math.Atan(1.15 / 1.67),
+	}
+
+	fmt.Printf("Beleuchtungsstärke: %f Lux\n", params.CalcIlluminance())
 }
