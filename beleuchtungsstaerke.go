@@ -3,11 +3,12 @@ package main
 import "fmt"
 import "math"
 
-/*Dieses Programm berechnet die Beleuchtungsstärke einer punktförmigen Lichtquelle.
-Es wird angenommen, dass die Lichtstärke (engl. illuminance)
-der Lichtquelle über den ganzen Abstrahlwinkel (in Sterandiant) konstant bleibt.
-Daher ist in diesem Fall:
-Lichtstärke = Lichtstrom(engl. luminous_flux)/Raumwinkel(engl. solid_angle)
+/*
+Dieses Programm berechnet die Beleuchtungsstärke einer punktförmigen
+Lichtquelle.  Es wird angenommen, dass die Lichtstärke (engl. illuminance) der
+Lichtquelle über den ganzen Abstrahlwinkel (in Sterandiant) konstant bleibt.
+Daher ist in diesem Fall: Lichtstärke = Lichtstrom(engl.
+luminous_flux)/Raumwinkel(engl. solid_angle)
 */
 
 func deg2rad(opening_angle float64) float64 {
@@ -22,10 +23,10 @@ func sr2rad(solid_angle float64) float64 {
   return 2*math.Acos(-solid_angle/(2*math.Pi) + 1)
 }
 
-func rad2sr_rect(angle_x, angle_y float64) float64{
-  /* falls der Lichtkegel kein Kegel, sondern eine Pyramide ist.
-  Beispiele: Der Spiegel eines Overhead-Projektors,
-  eine rechteckige Straßenlaterne*/
+// falls der Lichtkegel kein Kegel, sondern eine Pyramide ist.
+// Beispiele: Der Spiegel eines Overhead-Projektors,
+// eine rechteckige Straßenlaterne*/
+func rad2srRect(angle_x, angle_y float64) float64{
   return 4*math.Asin(math.Sin(angle_x)*math.Sin(angle_y))
 }
 
